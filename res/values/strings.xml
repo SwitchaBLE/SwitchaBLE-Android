@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SwitchaBLE</string>
+    <string name="action_settings">Settings</string>
+    <string name="button_label">Alarms</string>
+    <string name="context_menu_edit">Edit</string>
+    <string name="context_menu_delete">Delete</string>
+
+</resources>
