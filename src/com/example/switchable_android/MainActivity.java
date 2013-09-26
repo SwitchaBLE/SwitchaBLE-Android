@@ -7,9 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -17,24 +15,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.widget.Adapter;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.ToggleButton;
 
 public class MainActivity extends Activity {
 
 	private Button alarm_button;
-	private ArrayList<Button> textViewAlarms;
-	private ArrayAdapter<Button> adapter;
+	private ArrayList<BLE_Alarm> textViewAlarms;
+	private AlarmArrayAdapter adapter;
 	private ListView switches_listView;
 	
 	private int hour;
@@ -66,8 +57,8 @@ public class MainActivity extends Activity {
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 	    
 	    
-	    //MenuInflater inflater = getMenuInflater();
-	    //inflater.inflate(R.menu.context_menu, menu);
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.context_menu, menu);
 	}
 	
 	@Override
@@ -148,6 +139,7 @@ public class MainActivity extends Activity {
 	
 	public void addAlarmSwitch() {
 		// create switch and modify looks
+		/*
 		Switch toggle = new Switch(getApplicationContext());
 		toggle.setText(new StringBuilder().append(padding_str(hour)).append(":").append(padding_str(minute)));
 		toggle.setTextSize(40);		// this should not be a constant
@@ -164,8 +156,9 @@ public class MainActivity extends Activity {
 		        }
 		    }
 		});
-				
-		textViewAlarms.add(toggle);
+		*/
+		BLE_Alarm alarm = new BLE_Alarm(hour, minute, true);
+		textViewAlarms.add(alarm);
 		adapter.notifyDataSetChanged();
 	}
 	
@@ -213,8 +206,8 @@ public class MainActivity extends Activity {
 		registerForContextMenu(switches_listView);
 		
 		// initialize variables to populate ListView
-		textViewAlarms = new ArrayList<Button>();
-		adapter = new ArrayAdapter<Button>(switches_listView.getContext(), android.R.layout.simple_list_item_1, textViewAlarms);
+		textViewAlarms = new ArrayList<BLE_Alarm>();
+		adapter = new AlarmArrayAdapter(switches_listView.getContext(), R.layout.listview_row, textViewAlarms);
 		switches_listView.setAdapter(adapter);
 				
 		// set up listener for "Alarms" button

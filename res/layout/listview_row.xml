@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <Switch
+        android:id="@+id/alarm_switch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:longClickable="true"
+        android:switchMinWidth="50dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="35dp"
+        android:paddingRight="25dp"
+        android:paddingTop="5dp"
+        android:textSize="30sp" />
+    
+</LinearLayout>
