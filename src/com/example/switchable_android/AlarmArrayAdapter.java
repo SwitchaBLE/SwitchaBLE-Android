@@ -55,7 +55,19 @@ public class AlarmArrayAdapter extends ArrayAdapter<BLE_Alarm> {
 		// obtains switch from context_menu.xml and sets text
 		Switch alarm_switch = (Switch) row.findViewById(R.id.alarm_switch);
 		alarm_switch.setText((CharSequence) getItem(position).toString());
-			
+		
+		/*
+		//set switch on/off functionality
+				toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				        if (isChecked) {
+				            // The toggle is enabled
+				        } else {
+				            // The toggle is disabled
+				        }
+				    }
+				});
+				*/
 		return row;
 	}
 	

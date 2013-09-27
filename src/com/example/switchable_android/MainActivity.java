@@ -23,13 +23,18 @@ import android.widget.TimePicker;
 
 public class MainActivity extends Activity {
 
-	private Button alarm_button;
-	private ArrayList<BLE_Alarm> textViewAlarms;
-	private AlarmArrayAdapter adapter;
+	// GUI private variables
 	private ListView switches_listView;
+	private AlarmArrayAdapter adapter;
+	private Button alarm_button;
+	
+	// Database private variables
+	private AlarmDataSource datasource;
+	private ArrayList<BLE_Alarm> textViewAlarms;
 	
 	private int hour;
 	private int minute;
+	private int pressedId;
 	
 	static final int TIME_DIALOG_ID = 999;
 	
@@ -38,6 +43,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		initialize_db();
 		initialize_gui();
 		addButtonListener();
 	}
@@ -54,9 +60,9 @@ public class MainActivity extends Activity {
 	                                ContextMenuInfo menuInfo) {
 	    super.onCreateContextMenu(menu, v, menuInfo);
 	    
+	    //pressedId = switches_listView.getPositionForView(v);
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-	    
-	    
+	    pressedId = info.position;
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.context_menu, menu);
 	}
@@ -64,15 +70,25 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	    
+    	// obtains instance of BLE_Alarm selected in GUI
+    	BLE_Alarm alarm = textViewAlarms.get(pressedId);
+    	
 	    switch (item.getItemId()) {
+	    	
 	        case R.id.context_menu_edit:
 	            //editAlarm(info.id);
-	        	
 	            return true;
+	            
 	        case R.id.context_menu_delete:
-	            //deleteNote(info.id);
 	        	
+	        	// delete BLE_Alarm from database and ArrayList
+	            datasource.deleteBLE_Alarm(alarm);
+	            textViewAlarms.remove(pressedId);
+	            
+	        	adapter.notifyDataSetChanged();		// updates GUI
 	            return true;
+	            
 	        default:
 	            return super.onContextItemSelected(item);
 	    }
@@ -119,84 +135,18 @@ public class MainActivity extends Activity {
 			hour = selectedHour;
 			minute = selectedMinute;
 			
-			//addAlarmButton();
-			addAlarmSwitch();
-			//this is where the alarm will be created for the system
+			addAlarm(selectedHour, selectedMinute, true);
+
 		}
 	};
+	
+	private void addAlarm(int hour, int minute, boolean status) {
+		
+		// add alarm setup to database
+		BLE_Alarm alarm = datasource.createBLE_Alarm(hour,  minute,  status);
+		textViewAlarms.add(alarm);			// add alarm to ArrayList
+		adapter.notifyDataSetChanged();		// notify adapter of changes
 
-	private void addAlarmButton() {
-		// create new Button to house time setup
-		Button alarmAdded = new Button(getApplicationContext());
-		alarmAdded.setText(new StringBuilder().append(padding_str(hour)).append(":").append(padding_str(minute)));
-		
-		LinearLayout main_layout = (LinearLayout) findViewById(R.id.main_layout);
-		main_layout.addView(alarmAdded);	// add new Button to LinearLayout
-		
-		//textViewAlarms.add(alarmAdded);		// store alarm setup
-		//textViewAlarms.add(padding_str(hour)+":"+padding_str(minute));
-	}
-	
-	public void addAlarmSwitch() {
-		// create switch and modify looks
-		/*
-		Switch toggle = new Switch(getApplicationContext());
-		toggle.setText(new StringBuilder().append(padding_str(hour)).append(":").append(padding_str(minute)));
-		toggle.setTextSize(40);		// this should not be a constant
-		toggle.setPadding(40,0,40,0);
-		registerForContextMenu(toggle);
-		
-		//set switch on/off functionality
-		toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-		    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		        if (isChecked) {
-		            // The toggle is enabled
-		        } else {
-		            // The toggle is disabled
-		        }
-		    }
-		});
-		*/
-		BLE_Alarm alarm = new BLE_Alarm(hour, minute, true);
-		textViewAlarms.add(alarm);
-		adapter.notifyDataSetChanged();
-	}
-	
-	// Create Dialog to prompt for alarm deletion
-	private void promptDelete() {
-		AlertDialog.Builder alertDelete = new AlertDialog.Builder(this);
-		 
-		alertDelete.setTitle("SwitchaBLE");
-		alertDelete.setMessage("Delete this alarm?");
-		 
-		// configuring "ok" button and response
-		alertDelete.setPositiveButton("Ok",
-				new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog, int which) {
-		                // Write your code here to execute after dialog
-		            	
-		            	// insert code here to delete alarm
-		            }
-		        });
-		
-		// configuring "cancel" button and response
-		alertDelete.setNegativeButton("Cancel",
-		        new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog, int which) {
-		                // Write your code here to execute after dialog
-
-		            	// do nothing here
-		            }
-		        });
-		 
-		alertDelete.show();
-	}
-	
-	private static String padding_str(int c) {
-		if (c >= 10)
-		   return String.valueOf(c);
-		else
-		   return "0" + String.valueOf(c);
 	}
 	
 	private void initialize_gui() {
@@ -206,11 +156,21 @@ public class MainActivity extends Activity {
 		registerForContextMenu(switches_listView);
 		
 		// initialize variables to populate ListView
-		textViewAlarms = new ArrayList<BLE_Alarm>();
 		adapter = new AlarmArrayAdapter(switches_listView.getContext(), R.layout.listview_row, textViewAlarms);
 		switches_listView.setAdapter(adapter);
 				
 		// set up listener for "Alarms" button
 		addButtonListener();
 	}
+	
+	private void initialize_db() {
+		
+		// create data source & obtain database
+		datasource = new AlarmDataSource(this);
+		datasource.open();
+		
+		// retrieve all alarms from database
+		textViewAlarms = datasource.getAllAlarms();
+	}
+
 }

@@ -7,10 +7,14 @@ import android.text.format.Time;
 
 public class BLE_Alarm {
 	
+	private long id;
 	private int hour, minute;
 	private boolean isSet;
 	
 	// default constructor for BLE_Alarm
+	public BLE_Alarm() {}
+	
+	// constructor initializes private variables
 	public BLE_Alarm(int hour, int minute, boolean isSet) {
 		
 		// initialize private variables
@@ -19,9 +23,18 @@ public class BLE_Alarm {
 		this.isSet = isSet;
 	}
 	
-	// setter method for alarm time
-	public void setTime(int hour, int minute) {
+	// setter method for alarm id
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	// setter method for alarm hour
+	public void setHour(int hour) {
 		this.hour = hour;
+	}
+	
+	// setter method for alarm minute
+	public void setMinute(int minute) {
 		this.minute = minute;
 	}
 	
@@ -31,6 +44,7 @@ public class BLE_Alarm {
 	}
 	
 	// getter method for all attributes
+	public long getId() { return id; }
 	public int getHour() { return hour; }
 	public int minute() { return minute; }
 	public boolean isSet() { return isSet; }
