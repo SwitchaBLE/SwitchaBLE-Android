@@ -55,10 +55,23 @@ public class AlarmDataSource {
 		return addedAlarm;
 	}
 	
-	// deletes alarm setup from database and returns status of operation
+	// deletes alarm setup from database
 	public void deleteBLE_Alarm(BLE_Alarm alarm) {
 		long id = alarm.getId();
 		database.delete(AlarmOpenHelper.TABLE_NAME, AlarmOpenHelper.KEY_ID + " = " + id, null);
+	}
+	
+	// edits the given alarm setup and updates database
+	public void editBLE_Alarm(BLE_Alarm alarm, int hour, int minute, boolean isSet){
+		
+		// establishes a set of key-value pairs
+		ContentValues values = new ContentValues();
+		values.put(AlarmOpenHelper.KEY_HOUR, hour);
+		values.put(AlarmOpenHelper.KEY_MINUTE, minute);
+		values.put(AlarmOpenHelper.KEY_STATUS, isSet);
+		
+		long id = alarm.getId();
+		database.update(AlarmOpenHelper.TABLE_NAME, values, AlarmOpenHelper.KEY_ID + " = " + id, null);
 	}
 	
 	// retrieves all alarms and stores them in ArrayList

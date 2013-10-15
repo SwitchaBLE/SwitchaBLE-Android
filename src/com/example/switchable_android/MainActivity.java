@@ -1,13 +1,18 @@
 package com.example.switchable_android;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -20,6 +25,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -34,6 +40,7 @@ public class MainActivity extends Activity {
 	
 	private int hour;
 	private int minute;
+	private boolean[] repeating;
 	private int pressedId;
 	
 	static final int TIME_DIALOG_ID = 999;
@@ -69,7 +76,6 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    
     	// obtains instance of BLE_Alarm selected in GUI
     	BLE_Alarm alarm = textViewAlarms.get(pressedId);
@@ -77,7 +83,15 @@ public class MainActivity extends Activity {
 	    switch (item.getItemId()) {
 	    	
 	        case R.id.context_menu_edit:
-	            //editAlarm(info.id);
+	            
+	        	// create intent to edit an existing alarm
+	        	Intent intent = new Intent(MainActivity.this, AlarmSetupActivity.class);
+	        	intent.putExtra("hour",  alarm.getHour());
+	        	intent.putExtra("minute",  alarm.getMinute());
+	        	intent.putExtra("status", alarm.isSet());
+	        	//intent.putExtra("repeating", alarm.getRepeat());
+	        	
+	        	MainActivity.this.startActivityForResult(intent, 2);
 	            return true;
 	            
 	        case R.id.context_menu_delete:
@@ -87,6 +101,7 @@ public class MainActivity extends Activity {
 	            textViewAlarms.remove(pressedId);
 	            
 	        	adapter.notifyDataSetChanged();		// updates GUI
+	        	Toast.makeText(this, R.string.alarm_deletion, Toast.LENGTH_LONG).show();
 	            return true;
 	            
 	        default:
@@ -102,43 +117,40 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				showDialog(TIME_DIALOG_ID);
-				alarm_button.setFocusable(false);
+				//showDialog(TIME_DIALOG_ID);
+				//alarm_button.setFocusable(false);
+				
+				Intent intent = new Intent(MainActivity.this, AlarmSetupActivity.class);
+				MainActivity.this.startActivityForResult(intent, 1);
 			}
 			
 		});
-		/*
-		// add the "long" click listener
-		alarm_button.setOnLongClickListener(new OnLongClickListener() {
-			
-			@Override
-			public boolean onLongClick(View v) {
-				promptDelete();
-				return true;
-			}
-		}); */
 		
 	}
 	
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		switch (id) {
-		case TIME_DIALOG_ID:
-			// set time picker as current time
-			return new TimePickerDialog(this, timePickerListener, hour, minute, false);
-		}
-		return null;
-	}
 	
-	private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
-		public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
-			hour = selectedHour;
-			minute = selectedMinute;
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		if(resultCode == RESULT_OK) {
 			
-			addAlarm(selectedHour, selectedMinute, true);
-
+			//retrieving setup from intent
+			hour = data.getIntExtra("hour", 0);
+			minute = data.getIntExtra("minute", 0);
+			repeating = data.getBooleanArrayExtra("repeating");
+			
+			if(requestCode == 1) {		// new alarm created
+				
+				addAlarm(hour, minute, true);
+				scheduleAlarm(hour, minute);
+				
+			} else if(requestCode == 2) {	// alarm edited
+				
+				editAlarm(hour, minute, true);
+				Toast mToast = Toast.makeText(this, "Alarm edited.", Toast.LENGTH_LONG);
+				mToast.show();
+			}
 		}
-	};
+	}
 	
 	private void addAlarm(int hour, int minute, boolean status) {
 		
@@ -146,7 +158,32 @@ public class MainActivity extends Activity {
 		BLE_Alarm alarm = datasource.createBLE_Alarm(hour,  minute,  status);
 		textViewAlarms.add(alarm);			// add alarm to ArrayList
 		adapter.notifyDataSetChanged();		// notify adapter of changes
-
+	}
+	
+	private void editAlarm(int hour, int minute, boolean status) {
+		
+		BLE_Alarm alarm = textViewAlarms.get(pressedId);
+		datasource.editBLE_Alarm(alarm, hour, minute, status);
+		textViewAlarms.get(pressedId).setHour(hour);
+		textViewAlarms.get(pressedId).setMinute(minute);
+		textViewAlarms.get(pressedId).setStatus(status);
+		adapter.notifyDataSetChanged();
+	}
+	
+	// attempt to schedule using AlarmManager
+	private void scheduleAlarm(int hour, int minute) {
+		Intent intent = new Intent(this, OneShotAlarm.class);
+		PendingIntent sender = PendingIntent.getBroadcast(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		calendar.set(Calendar.MINUTE, minute);
+		
+		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+		am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+		
+		Toast mToast = Toast.makeText(this, "Alarm scheduled", Toast.LENGTH_LONG);
+		mToast.show();
 	}
 	
 	private void initialize_gui() {
@@ -158,12 +195,17 @@ public class MainActivity extends Activity {
 		// initialize variables to populate ListView
 		adapter = new AlarmArrayAdapter(switches_listView.getContext(), R.layout.listview_row, textViewAlarms);
 		switches_listView.setAdapter(adapter);
-				
+		
 		// set up listener for "Alarms" button
 		addButtonListener();
 	}
 	
 	private void initialize_db() {
+		
+		// initialize private variables
+		hour = 0;
+		minute = 0;
+		repeating = new boolean[7];
 		
 		// create data source & obtain database
 		datasource = new AlarmDataSource(this);
@@ -173,4 +215,8 @@ public class MainActivity extends Activity {
 		textViewAlarms = datasource.getAllAlarms();
 	}
 
+	public void onDestroy() {
+		super.onDestroy();
+		datasource.close();
+	}
 }

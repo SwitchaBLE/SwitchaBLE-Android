@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:text="TextView" />
+
+    <TimePicker
+        android:id="@+id/alarm_setup_timePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dip"
+        android:background="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:text="@string/alarm_repeat"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center" >
+
+        <ToggleButton
+            android:id="@+id/toggleButton1"
+            android:layout_width="40dp"
+            android:layout_height="37dp"
+            android:textOff="@string/sunday_initial" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton2"
+            android:layout_width="40dp"
+            android:layout_height="37dp"
+            android:textOff="@string/monday_initial" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton3"
+            android:layout_width="40dp"
+            android:layout_height="37dp"
+            android:textOff="@string/tuesday_initial" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton4"
+            android:layout_width="40dp"
+            android:layout_height="37dp"
+            android:textOff="@string/wednesday_initial" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton5"
+            android:layout_width="40dp"
+            android:layout_height="37dp"
+            android:textOff="@string/thursday_initial" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton6"
+            android:layout_width="40dp"
+            android:layout_height="37dp"
+            android:textOff="@string/friday_initial" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton7"
+            android:layout_width="40dp"
+            android:layout_height="37dp"
+            android:textOff="@string/saturday_initial" />
+    </LinearLayout>
+</LinearLayout>
+
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" 
+        android:layout_alignParentBottom="true" >
+
+        <Button
+            android:id="@+id/alarm_setup_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onBottomButtonClick"
+            android:text="@android:string/cancel"
+            android:width="150dp" />
+
+        <Button
+            android:id="@+id/alarm_setup_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onBottomButtonClick"
+            android:text="@android:string/ok"
+            android:width="150dp" />
+
+    </LinearLayout>
+</RelativeLayout>

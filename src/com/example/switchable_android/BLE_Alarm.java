@@ -46,7 +46,7 @@ public class BLE_Alarm {
 	// getter method for all attributes
 	public long getId() { return id; }
 	public int getHour() { return hour; }
-	public int minute() { return minute; }
+	public int getMinute() { return minute; }
 	public boolean isSet() { return isSet; }
 	
 	// formats time in a consistent manner
