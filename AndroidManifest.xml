@@ -5,9 +5,13 @@
     android:versionName="1.0" >
 
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
     
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="18"
         android:targetSdkVersion="18" />
 
     <application

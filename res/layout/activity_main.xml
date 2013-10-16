@@ -8,12 +8,18 @@
         android:id="@+id/alarm_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_label" />
-
+        android:text="@string/alarm_button_label" />
+    
+    <Button
+        android:id="@+id/devices_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/devices_button_label" />
+    
     <ListView
         android:id="@+id/switches_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
-  
+    
 </LinearLayout>

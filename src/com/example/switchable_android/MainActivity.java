@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
 	// GUI private variables
 	private ListView switches_listView;
 	private AlarmArrayAdapter adapter;
-	private Button alarm_button;
+	private Button alarm_button, devices_button;
 	
 	// Database private variables
 	private AlarmDataSource datasource;
@@ -52,7 +52,6 @@ public class MainActivity extends Activity {
 		
 		initialize_db();
 		initialize_gui();
-		addButtonListener();
 	}
 	
 	@Override
@@ -109,8 +108,9 @@ public class MainActivity extends Activity {
 	    }
 	}
 
-	private void addButtonListener() {
+	private void addButtonListeners() {
 		alarm_button = (Button) findViewById(R.id.alarm_button);	// obtain from XML
+		devices_button = (Button) findViewById(R.id.devices_button);
 		
 		// add the "short" click listener
 		alarm_button.setOnClickListener(new OnClickListener() {
@@ -122,6 +122,17 @@ public class MainActivity extends Activity {
 				
 				Intent intent = new Intent(MainActivity.this, AlarmSetupActivity.class);
 				MainActivity.this.startActivityForResult(intent, 1);
+			}
+			
+		});
+		
+		devices_button.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+		
+				Intent intent = new Intent(MainActivity.this, DeviceScanActivity.class);
+				startActivity(intent);
 			}
 			
 		});
@@ -197,7 +208,7 @@ public class MainActivity extends Activity {
 		switches_listView.setAdapter(adapter);
 		
 		// set up listener for "Alarms" button
-		addButtonListener();
+		addButtonListeners();
 	}
 	
 	private void initialize_db() {
