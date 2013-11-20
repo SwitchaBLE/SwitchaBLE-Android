@@ -62,6 +62,9 @@ public class AlarmSetupActivity extends Activity {
 				minute = selectedMinute;
 			}
 		});
+		
+//		Spinner spinnerDevices = (Spinner) findViewById(R.id.spinner_device);
+//		spinnerDevices.setAdapter(adapterDevices);
 	}
 	
 	private void initialize_data() {

@@ -36,7 +36,6 @@ public class LeDeviceListAdapter extends BaseAdapter {
         super();
         mLeDevices = new ArrayList<BluetoothDevice>();
         mInflator = LayoutInflater.from(context);
-        //mInflator = DeviceScanActivity.getContext().getLayoutInflater();
     }
 
     public void addDevice(BluetoothDevice device) {

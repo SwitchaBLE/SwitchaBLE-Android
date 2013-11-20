@@ -10,17 +10,19 @@ public class BLE_Alarm {
 	private long id;
 	private int hour, minute;
 	private boolean isSet;
+	private String device;
 	
 	// default constructor for BLE_Alarm
 	public BLE_Alarm() {}
 	
 	// constructor initializes private variables
-	public BLE_Alarm(int hour, int minute, boolean isSet) {
+	public BLE_Alarm(int hour, int minute, boolean isSet, String address) {
 		
 		// initialize private variables
 		this.hour = hour;
 		this.minute = minute;
 		this.isSet = isSet;
+		this.device = address;
 	}
 	
 	// setter method for alarm id
@@ -43,21 +45,18 @@ public class BLE_Alarm {
 		isSet = status;
 	}
 	
+	// set address of the paired device
+	public void setDevice(String address) {
+		this.device = address;
+	}
+	
 	// getter method for all attributes
 	public long getId() { return id; }
 	public int getHour() { return hour; }
 	public int getMinute() { return minute; }
 	public boolean isSet() { return isSet; }
+	public String getPairedDevice() { return device; }
 	
-	// formats time in a consistent manner
-	/*
-	public String toString() {
-		Time alarm_time = (new Time());
-		alarm_time.set(0, minute, hour, 1, 1, 1);
-		Format simple_time = new SimpleDateFormat("h:m a");
-		return (simple_time.format(alarm_time)).toString();
-	}
-	*/
 	public String toString() {
 		if (hour == 0) {
 			return "12:" + padding_str(minute) + " am";

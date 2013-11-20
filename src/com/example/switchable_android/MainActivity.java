@@ -27,6 +27,8 @@ import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import org.bluetooth.bledemo.ScanningActivity;
+
 public class MainActivity extends Activity {
 
 	// GUI private variables
@@ -131,7 +133,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 		
-				Intent intent = new Intent(MainActivity.this, DeviceScanActivity.class);
+				Intent intent = new Intent(MainActivity.this, ScanningActivity.class);
 				startActivity(intent);
 			}
 			

@@ -29,4 +29,6 @@
 	<!-- BLE LeDeviceListAdapter resources -->
 	<string name="unknown_device">Unknown BLE Device</string>
 	
+	<string name="title_activity_peripheral">Peripheral</string>
+    <string name="title_activity_hrdemo">HRDemoActivity</string>
 </resources>
