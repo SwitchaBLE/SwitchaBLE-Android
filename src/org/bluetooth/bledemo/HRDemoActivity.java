@@ -3,6 +3,7 @@ package org.bluetooth.bledemo;
 import com.example.switchable_android.AlarmSetupActivity;
 import com.example.switchable_android.MainActivity;
 import com.example.switchable_android.R;
+import com.example.switchable_android.DeviceDataSource;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -47,10 +48,12 @@ public class HRDemoActivity extends Activity {
 	private BluetoothGattService        mBTService = null;
 	private BluetoothGattCharacteristic mBTValueCharacteristic = null;
 	private byte[] byteValue;
-	// UUDI of Switchable service/characteristics:
+	
+	// UUDI of SwitchaBLE service/characteristics:
 	final static private UUID mSwitchableServiceUuid = BleDefinedUUIDs.Service.SWITCHABLE;
 	final static private UUID mLightStateCharacteristicUuid = BleDefinedUUIDs.Characteristic.LIGHT_STATE;
 	
+	private DeviceDataSource deviceSource = null;
 	private EditText mConsole = null;
 	private TextView mTextView  = null;
 	private Button bOff = null;
@@ -58,6 +61,7 @@ public class HRDemoActivity extends Activity {
 	private Button bToggle = null;
 	private Button bPulse = null;
 	private Button bStrobe = null;
+	private Button bSaveDevice = null;
 	
 	private String mDeviceName;
     private String mDeviceAddress;
@@ -93,6 +97,10 @@ public class HRDemoActivity extends Activity {
 		mConsole = (EditText) findViewById(R.id.hr_console_item);
 		log("Creating activity");
 		
+		// initialize the device database helper
+		deviceSource = new DeviceDataSource(this);
+		deviceSource.open();
+		
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setTitle("Control Panel");
@@ -110,6 +118,16 @@ public class HRDemoActivity extends Activity {
 		bPulse.setOnClickListener(myClickListener);
 		bStrobe = (Button) findViewById(R.id.strobe_char);
 		bStrobe.setOnClickListener(myClickListener);
+		
+		bSaveDevice = (Button) findViewById(R.id.button_save_device);
+		bSaveDevice.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				deviceSource.addDevice(mDeviceName, mDeviceAddress);				
+			}
+			
+		});
 		
 		mHandler = new Handler();
 		log("Activity created");
@@ -171,9 +189,9 @@ public class HRDemoActivity extends Activity {
 		
 		// then start discovering devices around
 		//startSearchingForHr();
-		startSearchingForS();
-		//mBTAdapter.getRemoteDevice(mDeviceAddress);
-		//connectToDevice();
+		//startSearchingForS();
+		mBTDevice =  mBTAdapter.getRemoteDevice(mDeviceAddress);
+		connectToDevice();
 		//discoverServices();
 //		if(mBTAdapter == null)
 //			log("It was null");
@@ -300,6 +318,7 @@ public class HRDemoActivity extends Activity {
         	log("Enabling notification failed!");
         	return;
         }
+        startAlarm();
 
 //        BluetoothGattDescriptor descriptor = mBTValueCharacteristic.getDescriptor(BleDefinedUUIDs.Descriptor.CHAR_CLIENT_CONFIG);
 //        if(descriptor != null) {
@@ -466,4 +485,17 @@ public class HRDemoActivity extends Activity {
 		//mHeaderTitle = (TextView) mListViewHeader.findViewById(R.id.peripheral_service_list_title);
 		//mHeaderBackButton = (TextView) mListViewHeader.findViewById(R.id.peripheral_list_service_back);
     }
+	
+	private void startAlarm() {
+		byte[] value = new byte[1];
+		value[0] = 1 << 3;
+		mBTValueCharacteristic.setValue(value);
+    	log("Wrote this value to the characteristic:" + value[0]);
+		mBTGatt.writeCharacteristic(mBTValueCharacteristic);
+	}
+	
+	public void onDestroy() {
+		super.onDestroy();
+		deviceSource.close();
+	}
 }

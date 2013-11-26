@@ -22,9 +22,25 @@ public final class R {
     }
     public static final class drawable {
         public static final int android_icon=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
+        public static final int ic_action_add_alarm=0x7f020001;
+        public static final int ic_action_alarms=0x7f020002;
+        public static final int ic_action_delete=0x7f020003;
+        public static final int ic_action_discard=0x7f020004;
+        public static final int ic_action_edit=0x7f020005;
+        public static final int ic_action_help=0x7f020006;
+        public static final int ic_action_new=0x7f020007;
+        public static final int ic_action_overflow=0x7f020008;
+        public static final int ic_action_refresh=0x7f020009;
+        public static final int ic_action_remove=0x7f02000a;
+        public static final int ic_action_settings=0x7f02000b;
+        public static final int ic_launcher=0x7f02000c;
     }
     public static final class id {
+        public static final int action_delete=0x7f08005e;
+        public static final int action_edit=0x7f08005d;
+        public static final int action_help=0x7f08005f;
+        public static final int action_new=0x7f08005c;
+        public static final int action_settings=0x7f080060;
         public static final int alarm_button=0x7f080013;
         public static final int alarm_setup_cancel=0x7f08002e;
         public static final int alarm_setup_ok=0x7f08002f;
@@ -54,8 +70,8 @@ public final class R {
         public static final int deviceName=0x7f08001c;
         public static final int deviceRssi=0x7f080020;
         public static final int device_address=0x7f080031;
-        public static final int device_connect=0x7f08005c;
-        public static final int device_disconnect=0x7f08005d;
+        public static final int device_connect=0x7f080061;
+        public static final int device_disconnect=0x7f080062;
         public static final int device_name=0x7f080030;
         public static final int devices_button=0x7f080014;
         public static final int hr_console_item=0x7f080010;
@@ -82,9 +98,9 @@ public final class R {
         public static final int peripheral_service_list_title=0x7f080055;
         public static final int peripheral_status=0x7f080018;
         public static final int pulse_char=0x7f08000d;
-        public static final int scanning_indicator=0x7f080060;
-        public static final int scanning_start=0x7f08005e;
-        public static final int scanning_stop=0x7f08005f;
+        public static final int scanning_indicator=0x7f080065;
+        public static final int scanning_start=0x7f080063;
+        public static final int scanning_stop=0x7f080064;
         public static final int spinner_device=0x7f08002c;
         public static final int strobe_char=0x7f08000e;
         public static final int switches_listView=0x7f080015;
@@ -141,38 +157,43 @@ public final class R {
     public static final class menu {
         public static final int context_menu=0x7f070000;
         public static final int main=0x7f070001;
-        public static final int peripheral=0x7f070002;
-        public static final int scanning=0x7f070003;
+        public static final int main_activity_actions=0x7f070002;
+        public static final int peripheral=0x7f070003;
+        public static final int scanning=0x7f070004;
     }
     public static final class string {
-        public static final int action_settings=0x7f050001;
-        public static final int alarm_button_label=0x7f050002;
-        public static final int alarm_deletion=0x7f050006;
-        public static final int alarm_repeat=0x7f050007;
+        public static final int action_delete=0x7f050009;
+        public static final int action_edit=0x7f050008;
+        public static final int action_help=0x7f05000a;
+        public static final int action_new=0x7f050007;
+        public static final int action_settings=0x7f05000b;
+        public static final int alarm_button_label=0x7f050001;
+        public static final int alarm_deletion=0x7f050005;
+        public static final int alarm_repeat=0x7f050006;
         /**  MainActivity resources 
          */
         public static final int app_name=0x7f050000;
-        public static final int context_menu_delete=0x7f050005;
-        public static final int context_menu_edit=0x7f050004;
-        public static final int devices_button_label=0x7f050003;
+        public static final int context_menu_delete=0x7f050004;
+        public static final int context_menu_edit=0x7f050003;
+        public static final int devices_button_label=0x7f050002;
         /**  BLE DeviceScanActivity resources 
          */
-        public static final int error_bluetooth_not_supported=0x7f05000f;
-        public static final int friday_initial=0x7f05000d;
-        public static final int menu_refresh=0x7f050012;
-        public static final int menu_scan=0x7f050010;
-        public static final int menu_stop=0x7f050011;
-        public static final int monday_initial=0x7f050009;
-        public static final int saturday_initial=0x7f05000e;
-        public static final int sunday_initial=0x7f050008;
-        public static final int thursday_initial=0x7f05000c;
-        public static final int title_activity_hrdemo=0x7f050015;
-        public static final int title_activity_peripheral=0x7f050014;
-        public static final int tuesday_initial=0x7f05000a;
+        public static final int error_bluetooth_not_supported=0x7f050013;
+        public static final int friday_initial=0x7f050011;
+        public static final int menu_refresh=0x7f050016;
+        public static final int menu_scan=0x7f050014;
+        public static final int menu_stop=0x7f050015;
+        public static final int monday_initial=0x7f05000d;
+        public static final int saturday_initial=0x7f050012;
+        public static final int sunday_initial=0x7f05000c;
+        public static final int thursday_initial=0x7f050010;
+        public static final int title_activity_hrdemo=0x7f050019;
+        public static final int title_activity_peripheral=0x7f050018;
+        public static final int tuesday_initial=0x7f05000e;
         /**  BLE LeDeviceListAdapter resources 
          */
-        public static final int unknown_device=0x7f050013;
-        public static final int wednesday_initial=0x7f05000b;
+        public static final int unknown_device=0x7f050017;
+        public static final int wednesday_initial=0x7f05000f;
     }
     public static final class style {
         /** 

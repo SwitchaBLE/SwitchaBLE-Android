@@ -3,13 +3,17 @@
 
     <!-- MainActivity resources -->
     <string name="app_name">SwitchaBLE</string>
-    <string name="action_settings">Settings</string>
     <string name="alarm_button_label">Alarms</string>
     <string name="devices_button_label">Devices</string>
     <string name="context_menu_edit">Edit</string>
     <string name="context_menu_delete">Delete</string>
     <string name="alarm_deletion">Alarm deleted</string>
     <string name="alarm_repeat">Alarm repeating</string>
+    <string name="action_new">New alarm</string>
+    <string name="action_edit">Edit alarm</string>
+    <string name="action_delete">Delete alarm</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_help">Help</string>
     
     <string name="sunday_initial">S</string>
     <string name="monday_initial">M</string>

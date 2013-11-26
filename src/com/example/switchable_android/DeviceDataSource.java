@@ -50,12 +50,16 @@ public class DeviceDataSource {
 			database.delete(DeviceOpenHelper.TABLE_NAME, DeviceOpenHelper.KEY_ID + " = " + id, null);
 		}
 		
-//		// retrieves all alarms and stores them in ArrayList
-//		public ArrayList<BLE_Alarm> getAllAlarms() {
+		public Cursor getDeviceCursor(){
+			return database.query( DeviceOpenHelper.TABLE_NAME, 
+					new String[]{DeviceOpenHelper.KEY_ID, DeviceOpenHelper.KEY_DEVICE_NAME}, null, null, null, null, null );
+		}
+//		// retrieves all devices and stores them in array
+//		public String[] getDeviceNames() {
 //			
-//			ArrayList<BLE_Alarm> alarmsList = new ArrayList <BLE_Alarm>();
-//			Cursor cursor = database.query(AlarmOpenHelper.TABLE_NAME, tableColumns, null,  
+//			Cursor cursor = database.query(DeviceOpenHelper.TABLE_NAME, tableColumns, null,  
 //					null,  null,  null,  null);
+//			String[] devices = new String[cursor.getCount()];
 //			
 //			cursor.moveToFirst();
 //			// traverse the table's rows
@@ -69,14 +73,14 @@ public class DeviceDataSource {
 //			cursor.close();
 //			return alarmsList;
 //		}
-		
-		private BLE_Alarm rowToAlarm(Cursor cursor) {
-			BLE_Alarm alarm = new BLE_Alarm();
-			alarm.setId(cursor.getLong(0));
-			alarm.setHour(cursor.getInt(1));
-			alarm.setMinute(cursor.getInt(2));
-			alarm.setStatus(cursor.getInt(3) == 1);
-			
-			return alarm;
-		}
+//		
+//		private BLE_Alarm rowToAlarm(Cursor cursor) {
+//			BLE_Alarm alarm = new BLE_Alarm();
+//			alarm.setId(cursor.getLong(0));
+//			alarm.setHour(cursor.getInt(1));
+//			alarm.setMinute(cursor.getInt(2));
+//			alarm.setStatus(cursor.getInt(3) == 1);
+//			
+//			return alarm;
+//		}
 }

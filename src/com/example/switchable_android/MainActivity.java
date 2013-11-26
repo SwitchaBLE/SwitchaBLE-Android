@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -44,6 +45,7 @@ public class MainActivity extends Activity {
 	private int minute;
 	private boolean[] repeating;
 	private int pressedId;
+	private boolean alarmSelected;
 	
 	static final int TIME_DIALOG_ID = 999;
 	
@@ -59,7 +61,62 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.main_activity_actions, menu);
+		
+		if (!alarmSelected) {
+            menu.findItem(R.id.action_new).setVisible(true);
+            menu.findItem(R.id.action_edit).setVisible(false);
+            menu.findItem(R.id.action_delete).setVisible(false);
+            menu.findItem(R.id.action_settings).setVisible(true);
+            menu.findItem(R.id.action_help).setVisible(true);
+//            menu.findItem(R.id.scanning_indicator)
+//                .setActionView(R.layout.progress_indicator);
+
+        } else {
+        	menu.findItem(R.id.action_new).setVisible(false);
+            menu.findItem(R.id.action_edit).setVisible(true);
+            menu.findItem(R.id.action_delete).setVisible(true);
+            menu.findItem(R.id.action_settings).setVisible(false);
+            menu.findItem(R.id.action_help).setVisible(false);
+//            menu.findItem(R.id.scanning_indicator).setActionView(null);
+        }
+        return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = new Intent(MainActivity.this, AlarmSetupActivity.class);
+		
+		switch(item.getItemId()) {
+		
+			case R.id.action_new:
+				MainActivity.this.startActivityForResult(intent, 1);
+				break;
+				
+			case R.id.action_edit:
+	        	intent.putExtra("hour",  textViewAlarms.get(pressedId).getHour());
+	        	intent.putExtra("minute",  textViewAlarms.get(pressedId).getMinute());
+	        	intent.putExtra("status", textViewAlarms.get(pressedId).isSet());
+	        	//intent.putExtra("repeating", alarm.getRepeat());
+	        	
+	        	MainActivity.this.startActivityForResult(intent, 2);
+	        	break;
+	        	
+			case R.id.action_delete:
+	        	// delete BLE_Alarm from database and ArrayList
+	            datasource.deleteBLE_Alarm(textViewAlarms.get(pressedId));
+	            textViewAlarms.remove(pressedId);
+	            
+	        	adapter.notifyDataSetChanged();		// updates GUI
+	        	Toast.makeText(this, R.string.alarm_deletion, Toast.LENGTH_SHORT).show();
+				break;
+				
+			default:
+				break;
+		}
+		
+		alarmSelected = false;
+		invalidateOptionsMenu();
 		return true;
 	}
 	
@@ -81,29 +138,31 @@ public class MainActivity extends Activity {
     	// obtains instance of BLE_Alarm selected in GUI
     	BLE_Alarm alarm = textViewAlarms.get(pressedId);
     	
+    	alarmSelected = true;
+    	invalidateOptionsMenu();
 	    switch (item.getItemId()) {
 	    	
 	        case R.id.context_menu_edit:
 	            
-	        	// create intent to edit an existing alarm
-	        	Intent intent = new Intent(MainActivity.this, AlarmSetupActivity.class);
-	        	intent.putExtra("hour",  alarm.getHour());
-	        	intent.putExtra("minute",  alarm.getMinute());
-	        	intent.putExtra("status", alarm.isSet());
-	        	//intent.putExtra("repeating", alarm.getRepeat());
-	        	
-	        	MainActivity.this.startActivityForResult(intent, 2);
-	            return true;
+//	        	// create intent to edit an existing alarm
+//	        	Intent intent = new Intent(MainActivity.this, AlarmSetupActivity.class);
+//	        	intent.putExtra("hour",  alarm.getHour());
+//	        	intent.putExtra("minute",  alarm.getMinute());
+//	        	intent.putExtra("status", alarm.isSet());
+//	        	//intent.putExtra("repeating", alarm.getRepeat());
+//	        	
+//	        	MainActivity.this.startActivityForResult(intent, 2);
+//	            return true;
 	            
 	        case R.id.context_menu_delete:
 	        	
-	        	// delete BLE_Alarm from database and ArrayList
-	            datasource.deleteBLE_Alarm(alarm);
-	            textViewAlarms.remove(pressedId);
-	            
-	        	adapter.notifyDataSetChanged();		// updates GUI
-	        	Toast.makeText(this, R.string.alarm_deletion, Toast.LENGTH_LONG).show();
-	            return true;
+//	        	// delete BLE_Alarm from database and ArrayList
+//	            datasource.deleteBLE_Alarm(alarm);
+//	            textViewAlarms.remove(pressedId);
+//	            
+//	        	adapter.notifyDataSetChanged();		// updates GUI
+//	        	Toast.makeText(this, R.string.alarm_deletion, Toast.LENGTH_LONG).show();
+//	            return true;
 	            
 	        default:
 	            return super.onContextItemSelected(item);
@@ -201,9 +260,23 @@ public class MainActivity extends Activity {
 	
 	private void initialize_gui() {
 		
+		alarmSelected = false;
+		
 		// initialize ListView paired with context menu
 		switches_listView = (ListView) findViewById(R.id.switches_listView);
-		registerForContextMenu(switches_listView);
+		//registerForContextMenu(switches_listView);
+		
+		switches_listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> arg0, View v,
+                    int index, long arg3) {
+            	
+                alarmSelected = true;
+                invalidateOptionsMenu();
+                pressedId = index;
+                return true;
+            }
+});
 		
 		// initialize variables to populate ListView
 		adapter = new AlarmArrayAdapter(switches_listView.getContext(), R.layout.listview_row, textViewAlarms);

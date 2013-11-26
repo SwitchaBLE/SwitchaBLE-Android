@@ -2,9 +2,12 @@ package com.example.switchable_android;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 public class AlarmSetupActivity extends Activity {
@@ -12,14 +15,15 @@ public class AlarmSetupActivity extends Activity {
 	private int hour;
 	private int minute;
 	private boolean[] repeating;
+	private DeviceDataSource deviceSource = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.alarm_setup);
 		
-		initialize_gui();
 		initialize_data();
+		initialize_gui();
 	}
 	
 	@Override
@@ -55,6 +59,9 @@ public class AlarmSetupActivity extends Activity {
 		
 		// setting the listener for the TimePicker view
 		TimePicker timeView = (TimePicker) findViewById(R.id.alarm_setup_timePicker);
+		timeView.setCurrentHour(hour);
+		timeView.setCurrentMinute(minute);
+		
 		timeView.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
 		
 			public void onTimeChanged(TimePicker view, int selectedHour, int selectedMinute) {
@@ -63,8 +70,17 @@ public class AlarmSetupActivity extends Activity {
 			}
 		});
 		
+		deviceSource = new DeviceDataSource(this);
+		deviceSource.open();
+		
 //		Spinner spinnerDevices = (Spinner) findViewById(R.id.spinner_device);
-//		spinnerDevices.setAdapter(adapterDevices);
+//		Cursor c = deviceSource.getDeviceCursor();
+//		// which fields to display
+//		String[] from = new String[]{DeviceOpenHelper.KEY_DEVICE_NAME};
+//		int[] to = new int[]{android.R.id.text1};
+//		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, c, from, to);
+//		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//		spinnerDevices.setAdapter(adapter);
 	}
 	
 	private void initialize_data() {
@@ -74,6 +90,7 @@ public class AlarmSetupActivity extends Activity {
 		if(data != null) {
 			hour = data.getInt("hour");
 			minute = data.getInt("minute");
+			
 			//repeating = data.getBooleanArray("repeating");
 		}else{
 			hour = 0;
